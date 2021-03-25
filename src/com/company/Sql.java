@@ -23,7 +23,7 @@ public class Sql {
 
 
     /**
-     * add username and password in database (table User)
+     * add user (username and password) in database (table User)
      * @param UserName
      * @param Password
      * @throws SQLException
