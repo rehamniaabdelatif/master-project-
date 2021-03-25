@@ -1,7 +1,7 @@
-CREATE DATABASE mastre;
+CREATE DATABASE master;
 SHOW DATABASE;
 
-USE mastre;
+USE master;
 
 CREATE TABLE User (
     Personid int NOT NULL AUTO_INCREMENT PRIMARY KEY,
