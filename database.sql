@@ -1,4 +1,5 @@
 CREATE DATABASE mastre;
+SHOW DATABASE;
 
 USE mastre;
 
@@ -7,4 +8,5 @@ CREATE TABLE User (
     UserName varchar(10) NOT NULL,
     Pasword varchar(20) NOT NULL 
 );
-
+SHOW TABLES;
+DESC User;
