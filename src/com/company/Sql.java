@@ -1,6 +1,17 @@
 package com.company;
 
 import java.sql.*;
+import java.util.ArrayList;
+
+
+class Note{
+    int noteId;
+    String note;
+    Note(int noteId, String note){
+        this.noteId = noteId;
+        this.note = note;
+    }
+}
 
 public class Sql {
     private final String url = "jdbc:mysql://localhost:3306/master";
@@ -11,7 +22,6 @@ public class Sql {
 
     /**
      * connect database
-     * @throws SQLException
      */
     public Sql(){
         try {
@@ -34,48 +44,102 @@ public class Sql {
         PreparedStatement statement = connection.prepareStatement(sql);
         statement.setString(1, UserName);
         statement.setString(2, Password);
+        statement.executeUpdate();
 
-        int rows = statement.executeUpdate();
+        statement.close();
+    }
 
-        if (rows > 0)
-            System.out.println("good");
+    /**
+     * search form User table and return user id
+     * @param UserName
+     * @param Password
+     * @return String user id
+     */
+    @SuppressWarnings("unused")
+	public static int get_user_id( String UserName, String Password){
+        int personid = 0;
+
+        try {
+            String sql = "SELECT Personid FROM User WHERE (UserName=? AND Pasword=?);";
+
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, UserName);
+            statement.setString(2, Password);
+            ResultSet result = statement.executeQuery();
+
+            result.next();
+            personid = result.getInt("Personid");
+
+        }catch (Exception e) {
+            System.err.println("Got an exception! ");
+            System.err.println(e.getMessage());
+        }
+
+        return personid;
+    }
+
+
+    /**
+     * delete user
+     * @param Personid
+     * @throws SQLException
+     */
+    public static void delete_user( int Personid) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement("DELETE FROM User WHERE Personid=?;");
+        statement.setInt(1, Personid);
+        statement.executeUpdate();
+    }
+
+
+    /**
+     * add Note
+     * @param Note
+     * @param Personid
+     * @throws SQLException
+     */
+    public static void add_note( String Note, int Personid) throws SQLException {
+        String sql = "INSERT INTO Note (Note, Personid) values(?,?);";
+
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setString(1, Note);
+        statement.setInt(2, Personid);
+        statement.executeUpdate();
+
         statement.close();
     }
 
 
     /**
-     * search form User table and return UserName( result.getString(UserName) )
-     * @param UserName
-     * @param Password
-     * @return ResultSet you have UserName Password
+     * get note from user where returns the object loaded noteId and note
+     * @param Personid
+     * @return ArrayList<Note>
      * @throws SQLException
      */
-    public static ResultSet select_user( String UserName, String Password) throws SQLException {
-        String sql = "SELECT * FROM User;";
+    public static ArrayList<Note> get_note(int Personid) throws SQLException {
+        String sql = "SELECT Noteid,Note FROM Note where Personid=?;";
 
-        Statement statement = connection.createStatement();
-        ResultSet result = statement.executeQuery(sql);
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setInt(1,Personid);
+        ResultSet result = statement.executeQuery();
 
-        return result;
-    }
 
-    public static ResultSet select_note( String UserName, String Password) throws SQLException {
-        String sql = "SELECT * FROM Note;";
+        ArrayList<Note> note = new ArrayList<>();
+        while (result.next())
+            note.add( new Note(result.getInt("Noteid"), result.getString("Note")));
 
-        Statement statement = connection.createStatement();
-        ResultSet result = statement.executeQuery(sql);
 
-        return result;
+        return note;
     }
 
 
     /**
-     * delete user form table User
-     * @param UserName
+     * delete note
+     * @param Noteid
      * @throws SQLException
      */
-    public static void delete_user( String UserName) throws SQLException {
-        PreparedStatement statement = connection.prepareStatement("DELETE FROM User WHERE UserName = " + UserName + ";");
+    public static void delete_note( int Noteid) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement("DELETE FROM Note WHERE Noteid=?;");
+        statement.setInt(1, Noteid);
         statement.executeUpdate();
     }
 
