@@ -1,14 +1,9 @@
 package com.company;
 
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 public class Main {
 
-    public static void main(String[] args) throws SQLException {
-        new Sql();
-        Sql.connection.close();
+    public static void main(String[] args) {
+    new LoginForm();
 
     }
 }
