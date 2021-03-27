@@ -4,7 +4,7 @@ USE master;
 
 DROP TABLE IF EXISTS User;
 CREATE TABLE IF NOT EXISTS User(
-    Personid int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    Personid INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     UserName varchar(10) NOT NULL UNIQUE,
     Pasword varchar(20) NOT NULL 
 );
@@ -13,5 +13,6 @@ DROP TABLE IF EXISTS Note;
 CREATE TABLE IF NOT EXISTS Note(
     Noteid int NOT NULL AUTO_INCREMENT PRIMARY KEY,
     Note varchar(250) NOT NULL,
-    Personid INT REFERENCES User(Personid)
+    Personid INT,
+    FOREIGN KEY (Personid) REFERENCES User(Personid)
 );
