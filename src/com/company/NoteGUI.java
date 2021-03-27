@@ -88,7 +88,7 @@ public class NoteGUI{
          });
         panel.add(delete);
 
-
+/*
         user = new JButton("delete user");
         user.setBounds(10, 470, 400, 25);
         user.setBackground(new Color(78, 68, 68));
@@ -106,7 +106,7 @@ public class NoteGUI{
         });
         panel.add(user);
 
-
+*/
         update = new JButton("update note");
         update.setBounds(10, 100, 400, 25);
         update.setBackground(new Color(78, 68, 68));
@@ -127,6 +127,7 @@ public class NoteGUI{
 
         });
         panel.add(update);
+        
 
 
         table = new JTable();
@@ -153,6 +154,19 @@ public class NoteGUI{
         panel.add(success);
 
         addNoteDbIntoTable(Personid);
+        
+        JButton signOut = new JButton("sign out");
+        signOut.setBounds(10, 470, 400, 25);
+        signOut.setBackground(new Color(78, 68, 68));
+        signOut.setForeground(new Color(252, 219, 219));
+        signOut.setFocusable(false);
+        signOut.addActionListener( e-> {
+        	stage.dispose();
+        	new LoginForm();
+        });
+        panel.add(signOut);
+        
+        
 
     }
 
