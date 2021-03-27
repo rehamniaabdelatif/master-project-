@@ -7,6 +7,7 @@ import java.util.ArrayList;
 class Note{
     int noteId;
     String note;
+
     Note(int noteId, String note){
         this.noteId = noteId;
         this.note = note;

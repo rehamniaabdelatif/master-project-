@@ -21,7 +21,7 @@ public class LoginForm implements ActionListener{
         stage = new JFrame();
         stage.setTitle("Login");
         stage.setVisible(true);
-        stage.setSize(new Dimension(400, 200));
+        stage.setSize(new Dimension(400, 300));
         stage.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         //stage.setResizable(false);
 
@@ -46,15 +46,15 @@ public class LoginForm implements ActionListener{
         panel.add(password);
 
         login = new JButton("Login");
-        login.setBounds(10, 80, 80, 25);
+        login.setBounds(100, 80, 165, 25);
         login.setBackground(new Color(78, 68, 68));
         login.setForeground(new Color(252, 219, 219));
         login.setFocusable(false);
         panel.add(login);
         login.addActionListener((ActionListener) this);
 
-        add = new JButton("add");
-        add.setBounds(120, 80, 80, 25);
+        add = new JButton("add User");
+        add.setBounds(100, 110, 165, 25);
         add.setBackground(new Color(78, 68, 68));
         add.setForeground(new Color(252, 219, 219));
         add.setFocusable(false);
@@ -62,7 +62,7 @@ public class LoginForm implements ActionListener{
         add.addActionListener((ActionListener) this);
 
         success = new JLabel("");
-        success.setBounds(10, 110, 300, 25);
+        success.setBounds(100, 130, 300, 25);
         panel.add(success);
 
     }
@@ -72,9 +72,10 @@ public class LoginForm implements ActionListener{
         if (login.equals(e.getSource())){
             int ID = Sql.get_user_id(userName.getText(), password.getText());
             if (ID != 0){
-
+                stage.dispose();
+                new NoteGUI(ID);
             }else
-                success.setText("is not ixest");
+                success.setText("is not exist");
 
         }
         else if (add.equals(e.getSource())){

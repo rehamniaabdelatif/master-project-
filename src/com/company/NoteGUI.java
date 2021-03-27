@@ -1,2 +1,130 @@
-package com.company;public class NoteGUI {
+package com.company;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
+public class NoteGUI{
+    JFrame stage;
+    JPanel panel;
+    JTable table;
+    JTextField note;
+    JButton button;
+    JButton delete;
+    DefaultTableModel model;
+    JLabel success;
+
+    ArrayList<Note> noteList;
+
+    Object[] row = new Object[2];
+    int cont = 0;
+
+    public NoteGUI(int Personid) {
+        stage = new JFrame();
+        stage.setTitle("Login");
+        stage.setVisible(true);
+        stage.setSize(new Dimension(400, 600));
+        stage.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        stage.revalidate();
+        //stage.setResizable(false);
+
+        panel = new JPanel();
+        stage.add(panel);
+        panel.setLayout(null);
+
+        note = new JTextField();
+        note.setBounds(100, 20, 165, 25);
+        panel.add(note);
+
+        button = new JButton("add Note");
+        button.setBounds(100, 50, 165, 25);
+        button.setBackground(new Color(78, 68, 68));
+        button.setForeground(new Color(252, 219, 219));
+        button.setFocusable(false);
+        button.addActionListener(new ActionListener() {
+             @Override
+             public void actionPerformed(ActionEvent e) {
+                 try {
+                     success.setText("");
+                     Sql.add_note(note.getText(), Personid);
+                     row[0] = ++cont;
+                     row[1] = note.getText();
+                     model.addRow(row);
+                     noteList =  Sql.get_note(Personid);
+                 } catch (SQLException throwables) {
+                     success.setText("is not working");
+                 }
+             }
+         }
+
+        );
+        panel.add(button);
+
+        //delete button
+        delete = new JButton("delete Note");
+        delete.setBounds(100, 75, 165, 25);
+        delete.setBackground(new Color(78, 68, 68));
+        delete.setForeground(new Color(252, 219, 219));
+        delete.setFocusable(false);
+        delete.addActionListener(e -> {
+            int i = table.getSelectedRow();
+            if (i > -1){
+                String ID = table.getValueAt(i,0).toString();
+                try {
+                    Sql.delete_note(Integer.parseInt(ID));
+                    model.removeRow(i);
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+
+
+
+            }
+
+         });
+        panel.add(delete);
+
+        table = new JTable();
+
+        Object columns[] = {"id", "Note"};
+
+        model = new DefaultTableModel();
+        model.setColumnIdentifiers(columns);
+        table.setModel(model);
+        table.setBackground(Color.white);
+        table.setForeground(Color.black);
+        table.setSelectionBackground(Color.BLUE);
+        table.setGridColor(Color.CYAN);
+        table.setSelectionForeground(Color.LIGHT_GRAY);
+        table.setRowHeight(30);
+        table.setAutoCreateRowSorter(true);
+
+        JScrollPane pane = new JScrollPane(table);
+        pane.setBounds(10, 100, 400, 300);
+        panel.add(pane);
+
+        success = new JLabel();
+        success.setBounds(100, 0, 300, 25);
+        panel.add(success);
+
+        // add note from database into the table
+        try {
+            success.setText("");
+            noteList =  Sql.get_note(Personid);
+            for (int i = 0; i < noteList.size(); i++){
+                row[0] = noteList.get(i).noteId;
+                row[1] = noteList.get(i).note;
+                model.addRow(row);
+            }
+        } catch (SQLException throwables) {
+            success.setText("is not working");
+        }
+
+    }
+
+
 }
