@@ -15,19 +15,21 @@ public class NoteGUI{
     JTextField note;
     JButton button;
     JButton delete;
+    JButton user;
+    JButton update;
     DefaultTableModel model;
     JLabel success;
 
     ArrayList<Note> noteList;
 
     Object[] row = new Object[2];
-    int cont = 0;
 
     public NoteGUI(int Personid) {
+
         stage = new JFrame();
         stage.setTitle("Login");
         stage.setVisible(true);
-        stage.setSize(new Dimension(400, 600));
+        stage.setSize(new Dimension(430, 600));
         stage.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         stage.revalidate();
         //stage.setResizable(false);
@@ -37,21 +39,21 @@ public class NoteGUI{
         panel.setLayout(null);
 
         note = new JTextField();
-        note.setBounds(100, 20, 165, 25);
+        note.setBounds(10, 20, 400, 25);
         panel.add(note);
 
         button = new JButton("add Note");
-        button.setBounds(100, 50, 165, 25);
+        button.setBounds(10, 50, 400, 25);
         button.setBackground(new Color(78, 68, 68));
         button.setForeground(new Color(252, 219, 219));
         button.setFocusable(false);
-        button.addActionListener(new ActionListener() {
+        button.addActionListener( new ActionListener() {
              @Override
              public void actionPerformed(ActionEvent e) {
                  try {
                      success.setText("");
-                     Sql.add_note(note.getText(), Personid);
-                     row[0] = ++cont;
+
+                     row[0] = Sql.add_note(note.getText(), Personid);
                      row[1] = note.getText();
                      model.addRow(row);
                      noteList =  Sql.get_note(Personid);
@@ -66,7 +68,7 @@ public class NoteGUI{
 
         //delete button
         delete = new JButton("delete Note");
-        delete.setBounds(100, 75, 165, 25);
+        delete.setBounds(10, 75, 400, 25);
         delete.setBackground(new Color(78, 68, 68));
         delete.setForeground(new Color(252, 219, 219));
         delete.setFocusable(false);
@@ -81,16 +83,55 @@ public class NoteGUI{
                     throwables.printStackTrace();
                 }
 
-
-
             }
 
          });
         panel.add(delete);
 
+
+        user = new JButton("delete user");
+        user.setBounds(10, 470, 400, 25);
+        user.setBackground(new Color(78, 68, 68));
+        user.setForeground(new Color(252, 219, 219));
+        user.setFocusable(false);
+        user.addActionListener(e -> {
+            try {
+                Sql.delete_user(Personid);
+                stage.dispose();
+                new LoginForm();
+            } catch (SQLException throwables) {
+                success.setText("not delete use");
+            }
+
+        });
+        panel.add(user);
+
+
+        update = new JButton("update note");
+        update.setBounds(10, 100, 400, 25);
+        update.setBackground(new Color(78, 68, 68));
+        update.setForeground(new Color(252, 219, 219));
+        update.setFocusable(false);
+        update.addActionListener(e -> {
+            int i = table.getSelectedRow();
+            try {
+                String ID = table.getValueAt(i,0).toString();
+                Sql.update(note.getText(), Integer.parseInt(ID));
+                DefaultTableModel model = (DefaultTableModel) table.getModel();
+                model.setRowCount(0);
+                addNoteDbIntoTable(Personid);
+
+            } catch (SQLException throwables) {
+                success.setText("not update note");
+            }
+
+        });
+        panel.add(update);
+
+
         table = new JTable();
 
-        Object columns[] = {"id", "Note"};
+        Object[] columns = {"id", "Note"};
 
         model = new DefaultTableModel();
         model.setColumnIdentifiers(columns);
@@ -104,18 +145,25 @@ public class NoteGUI{
         table.setAutoCreateRowSorter(true);
 
         JScrollPane pane = new JScrollPane(table);
-        pane.setBounds(10, 100, 400, 300);
+        pane.setBounds(10, 160, 400, 300);
         panel.add(pane);
 
         success = new JLabel();
         success.setBounds(100, 0, 300, 25);
         panel.add(success);
 
-        // add note from database into the table
+        addNoteDbIntoTable(Personid);
+
+    }
+
+    /**
+     * add note from database into the table
+     */
+    private void addNoteDbIntoTable(int Personid){
         try {
             success.setText("");
             noteList =  Sql.get_note(Personid);
-            for (int i = 0; i < noteList.size(); i++){
+            for (int i = 0; i < noteList.size(); i++) {
                 row[0] = noteList.get(i).noteId;
                 row[1] = noteList.get(i).note;
                 model.addRow(row);
@@ -123,8 +171,5 @@ public class NoteGUI{
         } catch (SQLException throwables) {
             success.setText("is not working");
         }
-
     }
-
-
 }

@@ -58,7 +58,7 @@ public class Sql {
      */
     @SuppressWarnings("unused")
 	public static int get_user_id( String UserName, String Password){
-        int personid = 0;
+        int ID = -1;
 
         try {
             String sql = "SELECT Personid FROM User WHERE (UserName=? AND Pasword=?);";
@@ -69,14 +69,14 @@ public class Sql {
             ResultSet result = statement.executeQuery();
 
             result.next();
-            personid = result.getInt("Personid");
+            ID = result.getInt("Personid");
 
         }catch (Exception e) {
             System.err.println("Got an exception! ");
             System.err.println(e.getMessage());
         }
 
-        return personid;
+        return ID;
     }
 
 
@@ -93,20 +93,28 @@ public class Sql {
 
 
     /**
-     * add Note
+     * add note and return id of note
      * @param Note
      * @param Personid
+     * @return ID of note
      * @throws SQLException
      */
-    public static void add_note( String Note, int Personid) throws SQLException {
+    public static int add_note( String Note, int Personid) throws SQLException {
         String sql = "INSERT INTO Note (Note, Personid) values(?,?);";
 
-        PreparedStatement statement = connection.prepareStatement(sql);
+        PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
         statement.setString(1, Note);
         statement.setInt(2, Personid);
         statement.executeUpdate();
 
+        ResultSet Result = statement.getGeneratedKeys();
+        int ID = -1;
+        if (Result.next()){
+            ID = Result.getInt(1);
+        }
+
         statement.close();
+        return ID;
     }
 
 
@@ -132,6 +140,13 @@ public class Sql {
         return note;
     }
 
+    public static void update(String UPDATE, int Noteid) throws SQLException {
+        String sql = "UPDATE Note SET Note=? WHERE Noteid=?;";
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setString(1, UPDATE);
+        statement.setInt(2, Noteid);
+        statement.executeUpdate();
+    }
 
     /**
      * delete note

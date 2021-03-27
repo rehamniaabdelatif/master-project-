@@ -70,8 +70,9 @@ public class LoginForm implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e){
         if (login.equals(e.getSource())){
-            int ID = Sql.get_user_id(userName.getText(), password.getText());
-            if (ID != 0){
+            int ID = -1;
+            ID = Sql.get_user_id(userName.getText(), password.getText());
+            if (ID != -1){
                 stage.dispose();
                 new NoteGUI(ID);
             }else
