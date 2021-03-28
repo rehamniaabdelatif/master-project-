@@ -79,7 +79,7 @@ public class Sql {
         return ID;
     }
 
-
+/*
     /**
      * delete user
      * @param Personid
@@ -91,7 +91,7 @@ public class Sql {
         statement.executeUpdate();
     }
 
-
+*/
     /**
      * add note and return id of note
      * @param Note
