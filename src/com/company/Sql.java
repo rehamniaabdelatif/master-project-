@@ -79,19 +79,15 @@ public class Sql {
         return ID;
     }
 
-/*
-    /**
-     * delete user
-     * @param Personid
-     * @throws SQLException
-     */
+
+    /*
     public static void delete_user( int Personid) throws SQLException {
         PreparedStatement statement = connection.prepareStatement("DELETE FROM User WHERE Personid=?;");
         statement.setInt(1, Personid);
         statement.executeUpdate();
     }
-
 */
+
     /**
      * add note and return id of note
      * @param Note
