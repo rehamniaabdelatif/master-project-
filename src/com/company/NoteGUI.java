@@ -74,16 +74,21 @@ public class NoteGUI{
         delete.setFocusable(false);
         delete.addActionListener(e -> {
             int i = table.getSelectedRow();
-            if (i > -1){
-                String ID = table.getValueAt(i,0).toString();
-                try {
-                    Sql.delete_note(Integer.parseInt(ID));
-                    model.removeRow(i);
-                } catch (SQLException throwables) {
-                    throwables.printStackTrace();
-                }
+            while (i != -1){
+                if (i > -1){
+                    String ID = table.getValueAt(i,0).toString();
+                    try {
+                        Sql.delete_note(Integer.parseInt(ID));
+                        model.removeRow(i);
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                    }
+                    i = table.getSelectedRow();
 
+                }
             }
+
+
 
          });
         panel.add(delete);
