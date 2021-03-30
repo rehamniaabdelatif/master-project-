@@ -75,7 +75,6 @@ public class NoteGUI{
         delete.addActionListener(e -> {
             int i = table.getSelectedRow();
             while (i != -1){
-                if (i > -1){
                     String ID = table.getValueAt(i,0).toString();
                     try {
                         Sql.delete_note(Integer.parseInt(ID));
@@ -84,8 +83,6 @@ public class NoteGUI{
                         throwables.printStackTrace();
                     }
                     i = table.getSelectedRow();
-
-                }
             }
 
 
